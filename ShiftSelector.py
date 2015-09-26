@@ -1,4 +1,4 @@
-# Written by Donovan Bartish aka DRockstar
+ # Written by Donovan Bartish aka DRockstar
 import Live
 from _Framework.SessionComponent import SessionComponent
 from _Framework.ModeSelectorComponent import ModeSelectorComponent
@@ -82,7 +82,7 @@ class ShiftSelector(ModeSelectorComponent):
 #                 else:
                 self._control_modes.set_mode_buttons(self._all_buttons)
                 menu = ["SHIFT PRESSED", 
-                "VOLUMES", "PANS", "SENDS", "SHIFT", "DEVICE CONTROL", "CLIPS"]
+                "UNUSED", "PANS", "SENDS", "SHIFT", "DEVICE CONTROL", "CLIPS", "VOLUME"]
                 self._parent.menu_message(menu)
 
     def _toggle_value(self, value):

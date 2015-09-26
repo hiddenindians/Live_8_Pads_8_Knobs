@@ -98,7 +98,8 @@ class SpecialSessionComponent(SessionComponent):
                 self.song().view.selected_scene = self.song().scenes[self._scene_offset]
 
     def prepare_bank_right(self):
-        self.set_offsets(self.track_offset() + self._track_banking_increment, self.scene_offset())
+        #self.set_offsets(self.track_offset() + self._track_banking_increment, self.scene_offset())
+        self.set_offsets(self.track_offset() + 1, self.scene_offset())
         if TRACK_FOLLOWS_SESSION_BOX:
             selected_track = self.song().view.selected_track
             all_tracks = self.song().visible_tracks + self.song().return_tracks
@@ -110,7 +111,8 @@ class SpecialSessionComponent(SessionComponent):
         return self.prepare_bank_right()
 
     def prepare_bank_left(self):
-        self.set_offsets(max(self.track_offset() - self._track_banking_increment, 0), self.scene_offset())
+        #self.set_offsets(max(self.track_offset() - self._track_banking_increment, 0), self.scene_offset())
+        self.set_offsets(max(self.track_offset() - 1, 0), self.scene_offset())
         if TRACK_FOLLOWS_SESSION_BOX:
             selected_track = self.song().view.selected_track
             all_tracks = self.song().visible_tracks + self.song().return_tracks
@@ -120,11 +122,13 @@ class SpecialSessionComponent(SessionComponent):
 
     def _bank_left(self):
         return self.prepare_bank_left()
-
+        
+    '''
     def set_track_banking_increment(self, increment):
         SessionComponent.set_track_banking_increment(self, increment)
         self._horizontal_banking.update()
-
+    '''
+    
     def _on_custom_timer(self):
         if self.is_enabled():
             scroll_delays = [

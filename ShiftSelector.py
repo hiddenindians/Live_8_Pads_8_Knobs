@@ -3,7 +3,12 @@ import Live
 from _Framework.SessionComponent import SessionComponent
 from _Framework.ModeSelectorComponent import ModeSelectorComponent
 from _Framework.ButtonElement import ButtonElement
-from consts import MODE_BUTTONS_IN_REVERSE
+#from consts import MODE_BUTTONS_IN_REVERSE
+
+shift_menu = ["## SHIFT PRESSED ##",
+    "", "", "CLIPS", "SHIFT",
+    "VOLUMES", "PANS", "SENDS", "DEVICE CONTROL"
+]
 
 class ShiftSelector(ModeSelectorComponent):
     """ Shift Button """
@@ -70,14 +75,15 @@ class ShiftSelector(ModeSelectorComponent):
                 self._mixer.master_strip().set_volume_control(self._encoders[0])
                 self._mixer.master_strip().set_pan_control(self._encoders[1])
                 self._control_modes.set_mode_buttons(self._all_buttons)
-                if MODE_BUTTONS_IN_REVERSE == 1:
-                    self._control_modes.set_mode_buttons(reversed(self._all_buttons))
-                    self._parent.show_message("#### SHIFT PRESSED ####   "
-                    + "PAD 3: CLIPS    PAD 4: DEVICE CONTROL    PAD 5: SENDS    PAD 6: PANS    PAD 7: VOLUMES    ")
-                else:
-                    self._control_modes.set_mode_buttons(self._all_buttons)
-                    self._parent.show_message("#### SHIFT PRESSED ####   PADS:    "
-                    + "1: VOLUMES    2: PANS    3: SENDS    4: DEVICE CONTROL    5: CLIPS    ")
+#                 if MODE_BUTTONS_IN_REVERSE == 1:
+#                     self._control_modes.set_mode_buttons(reversed(self._all_buttons))
+#                     self._parent.show_message("#### SHIFT PRESSED ####   "
+#                     + "PAD 3: CLIPS    PAD 4: DEVICE CONTROL    PAD 5: SENDS    PAD 6: PANS    PAD 7: VOLUMES    ")
+#                 else:
+                self._control_modes.set_mode_buttons(self._all_buttons)
+                menu = ["SHIFT PRESSED", 
+                "VOLUMES", "PANS", "SENDS", "SHIFT", "DEVICE CONTROL", "CLIPS"]
+                self._parent.menu_message(menu)
 
     def _toggle_value(self, value):
         assert self._mode_toggle != None or AssertionError

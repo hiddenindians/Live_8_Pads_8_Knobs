@@ -6,23 +6,34 @@ from _Framework.TransportComponent import TransportComponent
 from _Framework.SessionComponent import SessionComponent
 from _Framework.ClipSlotComponent import ClipSlotComponent
 
+arrangement_menu = ["TRANSPORT (ARRANGEMENT):",
+    "STOP", "PLAY", "RECORD", "SHIFT",
+    "REWIND", "FFWD", "LOOP", "VIEW"
+]
+
+session_menu = ["TRANSPORT (SESSION)",
+    "STOP", "PLAY", "RECORD", "SHIFT",
+    "SCENE UP", "SCENE DOWN", "SCENE PLAY", "VIEW"
+]
+
 class TransportViewModeSelector(ModeSelectorComponent):
     """ Class that reassigns specific buttons based on the views visible in Live """
 
-    def __init__(self, transport, session, transport_buttons):
+    def __init__(self, parent, transport, session, transport_buttons):
         # Donovan assert instead of raise for Live 9?
         assert isinstance(transport, TransportComponent) or AssertionError
         assert isinstance(session, SessionComponent) or AssertionError
         ModeSelectorComponent.__init__(self)
+        self._parent = parent
         self._transport = transport
         self._session = session
-        self._stop_button = transport_buttons[0]
-        self._play_button = transport_buttons[1]
-        self._rwd_button = transport_buttons[2]
-        self._ffwd_button = transport_buttons[3]
-        self._loop_button = transport_buttons[4]
-        self._record_button = transport_buttons[5]
-        self._view_button = transport_buttons[6]
+        self._stop_button = None
+        self._play_button = None
+        self._record_button = None
+        self._rwd_button = None
+        self._ffwd_button = None
+        self._loop_button = None
+        self._view_button = None
         self.session_view_button = None
         self.view = Live.Application.get_application().view
         self.application().view.add_is_view_visible_listener('Session', self._on_view_changed)
@@ -30,18 +41,32 @@ class TransportViewModeSelector(ModeSelectorComponent):
 
     def disconnect(self):
         ModeSelectorComponent.disconnect(self)
+        self._parent = None
         self._transport = None
         self._session = None
         self._stop_button = None
         self._play_button = None
-        self._ffwd_button = None
-        self._rwd_button = None
-        self._loop_button = None
         self._record_button = None
+        self._rwd_button = None
+        self._ffwd_button = None
+        self._loop_button = None
         self._view_button = None
         self.session_view_button = None
         self.application().view.remove_is_view_visible_listener('Session', self._on_view_changed)
 
+    def set_buttons(self, buttons):
+        menu = list(arrangement_menu)
+        del menu[0]
+        del menu[3]
+        self._stop_button = buttons[menu.index("STOP")]
+        self._play_button = buttons[menu.index("PLAY")]
+        self._record_button = buttons[menu.index("RECORD")]
+        self._rwd_button = buttons[menu.index("REWIND")]
+        self._ffwd_button = buttons[menu.index("FFWD")]
+        self._loop_button = buttons[menu.index("LOOP")]
+        self._view_button = buttons[menu.index("VIEW")]
+        self.update()
+    
     def update(self):
         if self.is_enabled():
             scene = self._session.scene(0)
@@ -66,8 +91,11 @@ class TransportViewModeSelector(ModeSelectorComponent):
     def _on_view_changed(self):
         if self.application().view.is_view_visible('Session'):
             self._mode_index = 1
+            menu = session_menu
         else:
             self._mode_index = 0
+            menu = arrangement_menu
+        self._parent.menu_message(menu)
         self.update()
 
     def _set_session_view_button(self, button):
@@ -81,11 +109,9 @@ class TransportViewModeSelector(ModeSelectorComponent):
     def _session_view_value(self, value):
         assert isinstance(value, int)
         assert isinstance(self.session_view_button, ButtonElement)
-        if value is 127 or not self._view_button.is_momentary():
+        if value > 0 or not self._view_button.is_momentary():
             if not self.view.is_view_visible('Session'):
                 self.view.show_view('Session')
             else:
                 self.view.show_view('Arranger')
-
-
 

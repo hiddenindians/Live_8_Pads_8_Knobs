@@ -5,7 +5,7 @@ NUM_SCENES = 1
 GLOBAL_CHANNEL = 15
 # NOTE_MODE: 0: CC, 1: NOTE
 NOTE_MODE = 0
-#NOTE_MODE = 1 # uncomment if your pads and buttons are sending notes, not CC
+NOTE_MODE = 1 # uncomment if your pads and buttons are sending notes, not CC
 # ENCODERS: 8 MIDI CC numbers or MIDI Note numbers
 ENCODERS = [33, 34, 35, 36, 37, 38, 39, 40]
 # Transport: Stop, Play, Rewind, Fast Forward, Loop, Record
@@ -14,16 +14,7 @@ TRANSPORTS = [116, 117, 114, 115, 113, 118, 60]
 # Can add another pad # if another shift button
 PADS = [99, 100, 101, 102, 98, 61, 59]
 # In this case, SHIFT is PAD 8
-SHIFT = 58
-'''
-When pads are all in one row, reversing the mode buttons
-helps so you can change modes one handed when using the
-shift button.
-MODE_BUTTONS_IN REVERSE:
-0 = PAD MODES FROM TOP LEFT MOST PAD TO BOTTOM RIGHT
-1 = PAD MODES FROM BOTTOM RIGHT TO TOP LEFT
-'''
-MODE_BUTTONS_IN_REVERSE = 1
+SHIFT = 58 # 4TH pad is default of 0-7, in this case, 58
 '''
 ENCODER_MODES:
 0: absolute

@@ -86,11 +86,12 @@ class MiniLab_PLUS(ControlSurface):
             session = SpecialSessionComponent(NUM_TRACKS, NUM_SCENES)
             self.set_highlighting_session_component(session)
             self.suppress_session_highlight = False
-            session.set_track_banking_increment(1)
+            #session.set_track_banking_increment(1)
             mixer = SpecialMixerComponent(NUM_TRACKS)
             session.set_mixer(mixer)
             transport = TransportComponent()
-            transport_view_modes = TransportViewModeSelector(transport, session, transport_buttons)
+            transport_view_modes = TransportViewModeSelector(self, transport, session, transport_buttons)
+            transport_view_modes.set_buttons(transport_buttons)
             self._device_selection_follows_track_selection = True
             device = BestBankDeviceComponent()
             self.set_device_component(device)
@@ -149,6 +150,17 @@ class MiniLab_PLUS(ControlSurface):
         self.control_modes._set_clip_stop_button(None)
         self.control_modes.set_controls(None, None, None)
     
+    def menu_message(self, menu):
+        msg = ""
+        s = " " * 2
+        for i in range(len(menu)):
+            if i == 0:
+                msg += ("## " + menu[0] + " ##  PADS:" + s)
+            #elif menu[i] != "SHIFT":
+            else:
+                msg += (str(i) + ": " + menu[i] + s)
+        self.show_message(msg)
+
     def show_message(self, message):
         self._c_instance.show_message(message)
 

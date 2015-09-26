@@ -3,6 +3,11 @@ import Live
 from _Framework.ModeSelectorComponent import ModeSelectorComponent
 from _Framework.ButtonElement import ButtonElement
 
+transport_shift_menu = ["TRANSPORT SHIFT",
+    "SHIFT", "UNDO", "REDO", "SESSION RECORD",
+     "OVERDUB", "METRONOME", "TAP TEMPO", "AUTOMATION RECORD"
+]
+
 class TransportShiftSelector(ModeSelectorComponent):
     """ Shift Button """
 
@@ -22,6 +27,7 @@ class TransportShiftSelector(ModeSelectorComponent):
         self._record_automation_button = None
         self._metronome_button = None
         self._tap_tempo_button = None
+        self._buttons = None
         
     def disconnect(self):
         self._toggle_pressed = False
@@ -39,6 +45,7 @@ class TransportShiftSelector(ModeSelectorComponent):
         self._record_automation_button = None
         self._metronome_button = None
         self._tap_tempo_button = None
+        self._buttons = None
         ModeSelectorComponent.disconnect(self)
 
     def set_mode_toggle(self, button):
@@ -78,9 +85,7 @@ class TransportShiftSelector(ModeSelectorComponent):
                 self._set_tap_tempo_button(self._transport_buttons[5])
                 self._set_record_automation_button(self._transport_buttons[6])
                 self._set_session_record_button(self._shift_button)
-                self._parent.show_message("#### TRANSPORT SHIFT ####   PADS:    "
-                + "2: UNDO    3: REDO    4: OVERDUB    5: METRONOME    "
-                + "6: TAP TEMPO    7: AUTOMATION RECORD    8: SESSION RECORD    ")
+                self._parent.menu_message(transport_shift_menu)
 
     def _toggle_value(self, value):
         assert self._mode_toggle != None or AssertionError

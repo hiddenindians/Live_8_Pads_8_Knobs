@@ -3,6 +3,36 @@ import Live
 from _Framework.ModeSelectorComponent import ModeSelectorComponent
 from _Framework.ButtonElement import ButtonElement
 
+transport_menu = ["TRANSPORT",
+    "STOP", "PLAY", "RECORD", "SHIFT",
+    "REWIND", "FFWD", "LOOP", "VIEW"
+]
+
+volume_menu = ["VOLUME",
+    "MUTE", "SOLO", "ARM", "SHIFT",
+    "BANK LEFT", "BANK RIGHT", "TRACK LEFT", "TRACK RIGHT"
+]
+
+pan_menu = ["PAN",
+    "MUTE", "SOLO", "ARM", "SHIFT",
+    "BANK LEFT", "BANK RIGHT", "TRACK LEFT", "TRACK RIGHT"
+]
+
+send_menu = ["SEND",
+    "MUTE", "SOLO", "ARM", "SHIFT",
+    "BANK LEFT", "BANK RIGHT", "SEND DOWN", "SEND UP"
+]
+
+device_menu = ["DEVICE",
+    "DEVICE ON/OFF", "DEVICE LOCK", "ARM", "SHIFT",
+    "DEVICE LEFT", "DEVICE RIGHT", "BANK DOWN", "BANK UP"
+]
+
+clip_menu = ["CLIPS",
+    "CLIP STOP", "CLIP PLAY", "SCENE PLAY", "SHIFT",
+    "CLIP UP", "CLIP DOWN", "CLIP LEFT", "CLIP RIGHT" 
+]
+
 class ControlModeSelector(ModeSelectorComponent):
 
     def __init__(self, parent, mixer, session, device, device_nav):
@@ -88,56 +118,65 @@ class ControlModeSelector(ModeSelectorComponent):
             mode = self._mode_index
 
             if mode == 0 or (mode - self._pads_len) == 0:
-                self._session.set_track_bank_buttons(self._pads[1], self._pads[0])
-                self._mixer.set_select_buttons(self._pads[3], self._pads[2])
-                self._mixer.selected_strip().set_mute_button(self._pads[4])
-                self._mixer.selected_strip().set_solo_button(self._pads[5])
-                self._mixer.selected_strip().set_arm_button(self._pads[6])
+                menu = list(volume_menu)
+                del menu[0]
+                del menu[3]
+                self._mixer.selected_strip().set_mute_button(self._pads[menu.index("MUTE")])
+                self._mixer.selected_strip().set_solo_button(self._pads[menu.index("SOLO")])
+                self._mixer.selected_strip().set_arm_button(self._pads[menu.index("ARM")])
+                self._session.set_track_bank_buttons(self._pads[menu.index("BANK RIGHT")], self._pads[menu.index("BANK LEFT")])
+                self._mixer.set_select_buttons(self._pads[menu.index("TRACK RIGHT")], self._pads[menu.index("TRACK LEFT")])
                 self._set_volume_controls()
-                self._parent.show_message("#### VOLUME MODE ####  PADS:    "
-                + "1: BANK LEFT    2: BANK RIGHT    3: PREV TRACK    4: NEXT TRACK    "
-                + "5: MUTE    6: SOLO    7: RECORD")
+                self._parent.menu_message(volume_menu)
 
             elif mode == 1 or (mode - self._pads_len) == 1:
-                self._session.set_track_bank_buttons(self._pads[1], self._pads[0])
-                self._mixer.set_select_buttons(self._pads[3], self._pads[2])
-                self._mixer.selected_strip().set_mute_button(self._pads[4])
-                self._mixer.selected_strip().set_solo_button(self._pads[5])
-                self._mixer.selected_strip().set_arm_button(self._pads[6])
+                menu = list(pan_menu)
+                del menu[0]
+                del menu[3]
+                self._mixer.selected_strip().set_mute_button(self._pads[menu.index("MUTE")])
+                self._mixer.selected_strip().set_solo_button(self._pads[menu.index("SOLO")])
+                self._mixer.selected_strip().set_arm_button(self._pads[menu.index("ARM")])
+                self._session.set_track_bank_buttons(self._pads[menu.index("BANK RIGHT")], self._pads[menu.index("BANK LEFT")])
+                self._mixer.set_select_buttons(self._pads[menu.index("TRACK RIGHT")], self._pads[menu.index("TRACK LEFT")])
                 self._set_pan_controls()
-                self._parent.show_message("#### PAN MODE ####  PADS:    "
-                + "1:  BANK LEFT    2: BANK RIGHT    3: PREV TRACK    4: NEXT TRACK    "
-                + "5: MUTE    6: SOLO    7: RECORD")
+                self._parent.menu_message(pan_menu)
 
             elif mode == 2 or (mode - self._pads_len) == 2:
-                self._session.set_track_bank_buttons(self._pads[1], self._pads[0])
-                self._mixer.selected_strip().set_mute_button(self._pads[4])
-                self._mixer.selected_strip().set_solo_button(self._pads[5])
-                self._mixer.selected_strip().set_arm_button(self._pads[6])
-                self._set_send_nav(self._pads[3], self._pads[2])
+                menu = list(send_menu)
+                del menu[0]
+                del menu[3]
+                self._mixer.selected_strip().set_mute_button(self._pads[menu.index("MUTE")])
+                self._mixer.selected_strip().set_solo_button(self._pads[menu.index("SOLO")])
+                self._mixer.selected_strip().set_arm_button(self._pads[menu.index("ARM")])
+                self._session.set_track_bank_buttons(self._pads[menu.index("BANK RIGHT")], self._pads[menu.index("BANK LEFT")])
+                self._set_send_nav(self._pads[menu.index("SEND UP")], self._pads[menu.index("SEND DOWN")])
                 self._update_send_index(self.sends_index)
 
             elif mode == 3 or (mode - self._pads_len) == 3:
-                self._device_nav.set_device_nav_buttons(self._pads[0], self._pads[1])
-                self._device.set_bank_nav_buttons(self._pads[2], self._pads[3])
-                self._device.set_on_off_button(self._pads[4])
-                self._device.set_lock_button(self._pads[5])
-                self._mixer.selected_strip().set_arm_button(self._pads[6])
+                menu = list(device_menu)
+                del menu[0]
+                del menu[3]
+                self._device.set_on_off_button(self._pads[menu.index("DEVICE ON/OFF")])
+                self._device.set_lock_button(self._pads[menu.index("DEVICE LOCK")])
+                self._mixer.selected_strip().set_arm_button(self._pads[menu.index("ARM")])
+                self._device_nav.set_device_nav_buttons(self._pads[menu.index("DEVICE LEFT")], self._pads[menu.index("DEVICE RIGHT")])
+                self._device.set_bank_nav_buttons(self._pads[menu.index("BANK DOWN")], self._pads[menu.index("BANK UP")])
                 self._device.set_parameter_controls(self._controls)
-                self._parent.show_message("#### DEVICE MODE ####  PADS:    "
-                + "1: PREV DEVICE    2: NEXT DEVICE    3: PREV BANK    4: NEXT BANK    "
-                + "5: DEVICE ON/OFF    6: DEVICE LOCK    7: RECORD")
+                self._parent.menu_message(device_menu)
 
             elif mode == 4 or (mode - self._pads_len) == 4:
+                menu = list(clip_menu)
+                del menu[0]
+                del menu[3]
                 self.application().view.show_view('Session')
                 self._session._num_tracks = 1
                 self._session._do_show_highlight()
                 scene = self._session.scene(0)
-                self._session.set_track_bank_buttons(self._pads[1], self._pads[0])
-                self._session.set_scene_bank_buttons(self._pads[3], self._pads[2])
-                scene.set_launch_button(self._pads[4])
-                self._set_clip_launch_button(self._pads[5])
-                self._set_clip_stop_button(self._pads[6])
+                self._session.set_track_bank_buttons(self._pads[menu.index("CLIP RIGHT")], self._pads[menu.index("CLIP LEFT")])
+                self._session.set_scene_bank_buttons(self._pads[menu.index("CLIP DOWN")], self._pads[menu.index("CLIP UP")])
+                scene.set_launch_button(self._pads[menu.index("SCENE PLAY")])
+                self._set_clip_launch_button(self._pads[menu.index("CLIP PLAY")])
+                self._set_clip_stop_button(self._pads[menu.index("CLIP STOP")])
                 strip = self._mixer.channel_strip(0)
                 strip.set_volume_control(self._controls[0])
                 strip.set_pan_control(self._controls[1])
@@ -145,9 +184,7 @@ class ControlModeSelector(ModeSelectorComponent):
                 for index in range(len(self._controls) - 2):
                     self.send_controls.append(self._controls[index + 2])
                 strip.set_send_controls(tuple(self.send_controls))
-                self._parent.show_message("#### CLIPS MODE ####  PADS:    "
-                + "1: CLIP LEFT    2: CLIP RIGHT    3: CLIP UP    4: CLIP DOWN    "
-                + "5: LAUNCH SCENE    6: LAUNCH CLIP    7: STOP CLIP")
+                self._parent.menu_message(clip_menu)
 
             else:
                 self._mode_index = 0
@@ -180,7 +217,7 @@ class ControlModeSelector(ModeSelectorComponent):
     def _send_up_value(self, value):
         assert isinstance(value, int)
         assert isinstance(self.send_button_up, ButtonElement)
-        if value is 127 or not self.send_button_up.is_momentary():
+        if value > 0 or not self.send_button_up.is_momentary():
             if self.sends_index == (len(self.song().return_tracks) - 1):
                 self.sends_index = 0
             else:
@@ -191,7 +228,7 @@ class ControlModeSelector(ModeSelectorComponent):
     def _send_down_value(self, value):
         assert isinstance(value, int)
         assert isinstance(self.send_button_down, ButtonElement)
-        if value is 127 or not self.send_button_down.is_momentary():
+        if value > 0 or not self.send_button_down.is_momentary():
             if self.sends_index == 0:
                 self.sends_index = (len(self.song().return_tracks) - 1)
             else:
@@ -208,9 +245,9 @@ class ControlModeSelector(ModeSelectorComponent):
                 self.send_controls.append(None)
             self.send_controls[sends_index] = self._controls[index]
             strip.set_send_controls(tuple(self.send_controls))
-        self._parent.show_message("#### SEND " + send_letters[sends_index] + " MODE ####  PADS:    "
-         + "1: BANK LEFT     2: BANK RIGHT    3: SENDS DOWN    4: SENDS UP    "
-         + "5: MUTE    6: SOLO    7: RECORD")
+        menu = list(send_menu)
+        menu[0] = menu[0].replace("SEND", "SEND " + send_letters[sends_index])
+        self._parent.menu_message(menu)
 
     def _set_clip_launch_button(self, button):
         if (button is not self._clip_launch_button):
